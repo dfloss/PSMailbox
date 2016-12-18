@@ -1,9 +1,9 @@
 ﻿$here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
-ipmo PSMailBox -Force
+. "$here\$sut"
 
-Describe "Set-MailListener Unit" -Tag "Unit" {
-}
-
-Describe "Set-MailListener Integration" -Tag "Integration" {
+Describe "Send-CalendarInvite" {
+    It "does something useful" {
+        $true | Should Be $false
+    }
 }
