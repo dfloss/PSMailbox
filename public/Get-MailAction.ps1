@@ -2,17 +2,17 @@
     param(
         [Parameter(Mandatory)]
         [ValidateScript({$_.Ast.ParamBlock.Parameters.Count -eq 1})]
-            [ScriptBlock]$ScriptBlock
+            [ScriptBlock]$MailController
     )
 
     $MailAction =  {
-        param($ScriptBlock)
+        param($MailController)
         Try{
             foreach($notEvent in [array]$event.SourceEventArgs.Events){      
-                Write-Host "Actually trying"
                 $itmId = $notEvent.ItemId  
                 $message = [Microsoft.Exchange.WebServices.Data.EmailMessage]::Bind($Service,$itmId)
-                & $ScriptBlock $message
+                Write-Host "Actually trying"
+                & $MailController $message
             }
         }
         Catch{
@@ -20,6 +20,8 @@
         }
         Write-Host "Mail recieved: $($event.SourceEventArgs.Events.Gettype() | Out-String)"
     }
-    $SB = {& $MailAction $ScriptBlock}
-    Return $MailAction
+
+
+    $SB = {& $MailAction $MailController}
+    Return $SB
 }
