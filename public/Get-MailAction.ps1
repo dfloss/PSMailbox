@@ -7,11 +7,15 @@
 
     $MailAction =  {
         param($ScriptBlock)
-        foreach($notEvent in $event.SourceEventArgs.Events){      
-
+        Try{
+            foreach($notEvent in $event.SourceEventArgs.Events){      
                 $itmId = $notEvent.ItemId  
                 $message = [Microsoft.Exchange.WebServices.Data.EmailMessage]::Bind($Service,$itmId)
                 & $MailAction $message
+            }
+        }
+        Catch{
+            Add-Content -Value $_ -Path "$env:userProfile\Mailerror.txt" -Force
         }
     }
     $SB = {& $MailAction $ScriptBlock}
