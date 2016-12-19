@@ -6,7 +6,7 @@
     )
 
     $MailAction =  {
-        param($MailController)
+        param($MailController, $event)
         Try{
             foreach($notEvent in [array]$event.SourceEventArgs.Events){      
                 $itmId = $notEvent.ItemId  
@@ -18,7 +18,7 @@
         Catch{
             Write-Error $_
         }
-        Write-Host "Mail recieved: $($event.SourceEventArgs.Events.Gettype() | Out-String)"
+        Write-Host "Mail recieved: $($event.SourceEventArgs.Events | Out-String)"
     }
 
     Return $MailAction
