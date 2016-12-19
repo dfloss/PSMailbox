@@ -8,7 +8,7 @@
     $MailAction =  {
         param($ScriptBlock)
         Try{
-            foreach($notEvent in $event.SourceEventArgs.Events){      
+            foreach($notEvent in [array]$event.SourceEventArgs.Events){      
                 $itmId = $notEvent.ItemId  
                 $message = [Microsoft.Exchange.WebServices.Data.EmailMessage]::Bind($Service,$itmId)
                 & $ScriptBlock $message
