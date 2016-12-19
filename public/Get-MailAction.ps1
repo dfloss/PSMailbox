@@ -21,7 +21,5 @@
         Write-Host "Mail recieved: $($event.SourceEventArgs.Events.Gettype() | Out-String)"
     }
 
-
-    $SB = {& $MailAction $MailController}
-    Return $SB
+    Return $MailAction
 }
