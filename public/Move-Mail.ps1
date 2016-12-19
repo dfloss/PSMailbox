@@ -2,7 +2,7 @@
     [cmdletbinding()]
     param(
         [Parameter(Mandatory)]
-            [Microsoft.Exchange.WebServices.Data.EmailMessage]$Email,
+            [Object]$Email,
         [Parameter(Mandatory)]
             [String]$FolderName,
         [Parameter()]
