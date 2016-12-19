@@ -15,8 +15,9 @@
             }
         }
         Catch{
-            Add-Content -Value $_ -Path "$env:userProfile\Mailerror.txt" -Force
+            Write-Error $_
         }
+        Write-Host "Mail recieved $(Get-Date)"
     }
     $SB = {& $MailAction $ScriptBlock}
     Return $MailAction
