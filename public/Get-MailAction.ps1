@@ -9,8 +9,10 @@
         param($MailController, $event)
         Try{
             foreach($notEvent in [array]$event.SourceEventArgs.Events){      
-                $itmId = $notEvent.ItemId  
-                $message = [Microsoft.Exchange.WebServices.Data.EmailMessage]::Bind($Service,$itmId)
+                $itmId = $notEvent.ItemId
+                $PropertySet = new-object Microsoft.Exchange.WebServices.Data.PropertySet([Microsoft.Exchange.WebServices.Data.BasePropertySet]::FirstClassProperties)
+                $PropertySet.RequestedBodyType = [Microsoft.Exchange.WebServices.Data.BodyType]::Text
+                $message = [Microsoft.Exchange.WebServices.Data.EmailMessage]::Bind($Service,$itmId,$PropertySet)
                 Write-Host "Actually trying"
                 & $MailController $message
             }
