@@ -11,13 +11,14 @@
             foreach($notEvent in $event.SourceEventArgs.Events){      
                 $itmId = $notEvent.ItemId  
                 $message = [Microsoft.Exchange.WebServices.Data.EmailMessage]::Bind($Service,$itmId)
-                & $MailAction $message
+                & $ScriptBlock $message
+                Write-Host "Actually trying"
             }
         }
         Catch{
             Write-Error $_
         }
-        Write-Host "Mail recieved $(Get-Date)"
+        Write-Host "Mail recieved: $($event.SourceEventArgs.Events | Out-String)"
     }
     $SB = {& $MailAction $ScriptBlock}
     Return $MailAction
