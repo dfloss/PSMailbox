@@ -9,16 +9,16 @@
         param($ScriptBlock)
         Try{
             foreach($notEvent in [array]$event.SourceEventArgs.Events){      
+                Write-Host "Actually trying"
                 $itmId = $notEvent.ItemId  
                 $message = [Microsoft.Exchange.WebServices.Data.EmailMessage]::Bind($Service,$itmId)
                 & $ScriptBlock $message
-                Write-Host "Actually trying"
             }
         }
         Catch{
             Write-Error $_
         }
-        Write-Host "Mail recieved: $($event.SourceEventArgs.Events | Out-String)"
+        Write-Host "Mail recieved: $($event.SourceEventArgs.Events.Gettype() | Out-String)"
     }
     $SB = {& $MailAction $ScriptBlock}
     Return $MailAction
