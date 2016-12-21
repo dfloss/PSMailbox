@@ -13,14 +13,13 @@
                 $PropertySet = new-object Microsoft.Exchange.WebServices.Data.PropertySet([Microsoft.Exchange.WebServices.Data.BasePropertySet]::FirstClassProperties)
                 $PropertySet.RequestedBodyType = [Microsoft.Exchange.WebServices.Data.BodyType]::Text
                 $message = [Microsoft.Exchange.WebServices.Data.EmailMessage]::Bind($Service,$itmId,$PropertySet)
-                Write-Host "Actually trying"
                 & $MailController $message
             }
         }
         Catch{
+            Write-Error "Mail lisener failed with the following error: "
             Write-Error $_
         }
-        Write-Host "Mail recieved: $($event.SourceEventArgs.Events | Out-String)"
     }
 
     Return $MailAction
