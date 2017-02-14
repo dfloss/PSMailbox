@@ -1,7 +1,7 @@
 ﻿$here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
-Ipmo PSMailBox -Force
-
+Ipmo $here/../PSMailBox.psd1 -Force
+Set-DefaultMailbox
 Describe "Get-EwsFolder Unit" -Tag "Unit" {
 }
 

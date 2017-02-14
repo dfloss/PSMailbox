@@ -1,9 +1,9 @@
 ﻿function Get-EwsFolder {
     [cmdletbinding()]
     param(
-        [Parameter(Mandatory,ValueFromPipeline)][string]$FolderName,
+        [Parameter(ValueFromPipeline)][string]$FolderName = "Inbox",
         [Parameter()]
-            [Microsoft.Exchange.WebServices.Data.ExchangeService]$Service = $DefaultService
+            [Microsoft.Exchange.WebServices.Data.ExchangeService]$Service = $ScriptDefaultService
     )
     Switch($FolderName){
         "Inbox"{
