@@ -19,7 +19,7 @@
     $Email = [Microsoft.Exchange.WebServices.Data.EmailMessage]::new($Service)
     $To | %{$Email.ToRecipients.Add($_) | Out-Null}
     $Email.Subject = $Subject
-    $Bcc | %{$Email.BccRecipients.Add($_) | Out-Null}
+    If ($Bcc -ne $null){$Bcc | %{$Email.BccRecipients.Add($_) | Out-Null}}
     
     If ($Html){$BodyType = [Microsoft.Exchange.WebServices.Data.BodyType]::HTML}
     Else {$BodyType = [Microsoft.Exchange.WebServices.Data.BodyType]::Text}
