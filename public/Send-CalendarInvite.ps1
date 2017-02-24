@@ -5,7 +5,7 @@
             [string]$Subject,
         [Parameter(Mandatory)]
             [string]$Body,
-        [Parameter(Mandatory)]
+        [Parameter()]
             [string]$Location,
         [Parameter(Mandatory)]
             [DateTime]$Start,
