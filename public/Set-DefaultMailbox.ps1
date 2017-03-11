@@ -1,21 +1,28 @@
 ﻿function Set-DefaultMailbox {
     param(
-        [Parameter()]$CredFile = "C:\users\$env:UserName\PSMAILBOX.txt"
+        [Parameter()]$MailboxFile = "C:\users\$env:UserName\PSMAILBOX.xml",
+        [Parameter()][Switch]$Force
     )
-    If ($Script:DefaultService -ne $null){Return}
-    $Script:DefaultEmailAddress = "$($env:USERNAME)@$($env:USERDNSDOMAIN)"
-    $DefaultUri = 'https://outlook.office365.com/EWS/Exchange.asmx'
+    #Exit if Mailbox is already setup and force isn't specificed, prevents extra load times
+    If ($Script:DefaultService -ne $null -and -not $Force){Return}
 
     #setup creds, thanks office 365
-    Try{
-        $DefaultCreds = Import-Clixml -Path $CredFile
+    If ((Test-Path -Path $MailboxFile)){
+        Write-Verbose "Loading File $Mailboxfile"
+        $ServiceInfo = Import-Clixml $MailboxFile
+        $Service = Get-ExchangeService -emailaddress $ServiceInfo.Credential.Username -Credential $ServiceInfo.Credential.GetNetworkCredential() -Url $ServiceInfo.url
     }
-    Catch {
-        $DefaultCreds = Get-Credential -UserName $DefaultEmailAddress -Message "Enter your email password to setup the default credentials"
-        if ((Read-Host "Would you like to Store your credentials(y/N)") -like "y"){
-            $DefaultCreds | Export-CliXml -Depth 6 -Path $CredFile
+    Else{
+        $Credential = Get-Credential -Message "Please Input the Email address and password for the account you'd like to setup as you default PSMAILBOX account"
+        $Service = Get-ExchangeService -emailaddress $Credential.UserName -Credential $Credential.GetNetworkCredential()
+        $ServiceInfo = [PSCustomObject]@{
+            url = $Service.Url
+            credential = $Credential
         }
+        Export-Clixml -Path $MailboxFile -InputObject $ServiceInfo 
     }
-    $script:DefaultService = Get-ExchangeService -emailaddress $DefaultEmailAddress -Credential $DefaultCreds.GetNetworkCredential() -Uri $DefaultUrl
-    $script:DefaultInbox = [Microsoft.Exchange.WebServices.Data.Folder]::Bind($DefaultService,[Microsoft.Exchange.WebServices.Data.WellKnownFolderName]::Inbox)
+
+    $script:DefaultService = $Service
+    Write-Verbose "Service Set"
+    $script:DefaultInbox = [Microsoft.Exchange.WebServices.Data.Folder]::Bind($Script:DefaultService,[Microsoft.Exchange.WebServices.Data.WellKnownFolderName]::Inbox)
 }
