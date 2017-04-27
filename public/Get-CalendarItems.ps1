@@ -1,11 +1,12 @@
 ﻿function Get-CalendarItems {
+[CmdletBinding()][OutputType("Microsoft.Exchange.WebServices.Data.Appointment")]
     param(
         [Parameter()]
             [Microsoft.Exchange.WebServices.Data.ExchangeService]$Service = $DefaultService,
         [Parameter()]
-            [DateTime]$StartDate,
+            [DateTime]$StartDate = ((Get-Date).Date),
         [Parameter()]
-            [DateTime]$EndDate,
+            [DateTime]$EndDate = (((Get-Date).AddDays(1)).Date),
         [Parameter()]
             [int]$MaxAppointments = 100,
         [Parameter()]
