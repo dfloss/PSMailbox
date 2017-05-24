@@ -12,6 +12,8 @@
         [Parameter(Mandatory)]
             [DateTime]$End,
         [Parameter()]
+            [Switch]$RequestResponse,
+        [Parameter()]
             [String[]]$Attendees = $null,
         [Parameter()]
             [int] $ReminderMinutes = 15,
@@ -20,6 +22,7 @@
     )
     $Appointment = New-Object -TypeName Microsoft.Exchange.WebServices.Data.Appointment -ArgumentList $Service  #[Microsoft.Exchange.WebServices.Data.Appointment]::new($service)
 
+    $Appointment.IsResponseRequested = $RquestResponse
     $Appointment.Subject = $Subject
     $Appointment.Body = $Body
     $Appointment.Location = $Location
