@@ -9,9 +9,7 @@
     If ($Script:DefaultService -ne $null -and -not $Force){Return}
 
     #setup creds, thanks office 365
-    If ($MailboxFile -eq $null){
-    }
-    ElseIf ((Test-Path -Path $MailboxFile) -and -not $Force){
+    If ($MailboxFile -ne $null -and (Test-Path -Path $MailboxFile) -and -not $Force){
         Write-Verbose "Loading File $Mailboxfile"
         $ServiceInfo = Import-Clixml $MailboxFile
         $Service = Get-ExchangeService -emailaddress $ServiceInfo.Credential.Username -Credential $ServiceInfo.Credential.GetNetworkCredential() -Url $ServiceInfo.url
