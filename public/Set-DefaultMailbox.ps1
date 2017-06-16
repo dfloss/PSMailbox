@@ -15,7 +15,7 @@
         $Service = Get-ExchangeService -emailaddress $ServiceInfo.Credential.Username -Credential $ServiceInfo.Credential.GetNetworkCredential() -Url $ServiceInfo.url
     }
     Else{
-        $Credential = Get-Credential -Message "Please Input the Email address and password for the account you'd like to setup as you default PSMAILBOX account" -UserName $Script:DefaultEmailAddress
+        $Credential = Get-Credential -Message "Please Input the Email address and password for the account you'd like to setup as you default PSMAILBOX account at $MailBoxFile" -UserName $Script:DefaultEmailAddress 
         $Service = Get-ExchangeService -emailaddress $Credential.UserName -Credential $Credential.GetNetworkCredential() -url $Script:DefaultUri
         $ServiceInfo = [PSCustomObject]@{
             url = $Service.Url
