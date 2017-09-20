@@ -1,19 +1,22 @@
 ﻿function Send-Email {
     Param(
-        [Parameter()]
-            [Microsoft.Exchange.WebServices.Data.ExchangeService]$Service = $DefaultService,
         [Parameter(Mandatory)]
-            [String]$Body,
+            [string[]]$To,
         [Parameter(Mandatory)]
             [String]$Subject,
         [Parameter(Mandatory)]
-            [string[]]$To,
+            [String]$Body,
         [Parameter(Mandatory = $false)]
             [string[]]$Bcc = $null,
         [Parameter()]
             [switch]$Html,
+        [Parameter()]
+            [ValidateScript({Test-Path $_})]
+            [string[]]$Attachments,
         [Parameter(ParameterSetName="InlineImage")]
-            [HashTable]$InlineImages
+            [HashTable]$InlineImages,
+        [Parameter()]
+            [Microsoft.Exchange.WebServices.Data.ExchangeService]$Service = $DefaultService
     )
     
     $Email = [Microsoft.Exchange.WebServices.Data.EmailMessage]::new($Service)
@@ -25,6 +28,12 @@
     Else {$BodyType = [Microsoft.Exchange.WebServices.Data.BodyType]::Text}
     $Email.Body = [Microsoft.Exchange.WebServices.Data.MessageBody]::new($BodyType,$Body)
 
+    #AttachMents
+    Foreach($Attachment in $Attachments){
+        $Email.Attachments.AddFileAttachment($Attachment) | Out-Null
+    }
+
+    #Inline Images
     If ($PSCmdlet.ParameterSetName -eq "InlineImage"){
         $i=0
         $InlineImages.GetEnumerator() | %{

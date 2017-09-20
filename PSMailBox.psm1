@@ -25,4 +25,4 @@
 
 #Export all public modules
 Export-ModuleMember -Function $Public.Basename
-Set-DefaultMailbox
+Set-DefaultMailbox -Save
