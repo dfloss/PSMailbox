@@ -23,6 +23,8 @@
         }
     }
 
+#load Autocompleters
+. "$PsSCriptRoot\autocompleters.ps1"
 #Export all public modules
 Export-ModuleMember -Function $Public.Basename
 Set-DefaultMailbox -Save

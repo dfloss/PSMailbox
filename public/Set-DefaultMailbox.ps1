@@ -1,10 +1,23 @@
 ﻿function Set-DefaultMailbox {
+    [cmdletbinding(DefaultParameterSetName="File")]
     param(
-        [Parameter()]$MailboxFile = $Script:DefaultMailboxFile,
-        [Parameter()][Switch]$Force,
-        [Parameter()][Switch]$Save
-
+        [Parameter(Mandatory,ParameterSetName="Mailbox")]
+            $Mailbox,
+        [Parameter(ParameterSetName="File")]
+            $MailboxFile = $Script:DefaultMailboxFile,
+        [Parameter()]
+            [Switch]$Force,
+        [Parameter()]
+            [Switch]$Save
     )
+    if ($PSCmdlet.ParameterSetName -eq "Mailbox"){
+        $MailboxFile = "$Script:DefaultMailboxLocation\$Mailbox"
+        $ServiceInfo = Import-Clixml $MailboxFile
+        $Service = Get-ExchangeService -emailaddress $ServiceInfo.Credential.Username -Credential $ServiceInfo.Credential.GetNetworkCredential() -Url $ServiceInfo.url
+        $Script:DefaultService = $Service.Ser
+        $script:DefaultInbox = [Microsoft.Exchange.WebServices.Data.Folder]::Bind($Service,[Microsoft.Exchange.WebServices.Data.WellKnownFolderName]::Inbox)
+        Return
+    }
     #Exit if Mailbox is already setup and force isn't specificed, prevents extra load times
     If ($Script:DefaultService -ne $null -and -not $Force){Return}
 

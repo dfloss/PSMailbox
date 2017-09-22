@@ -1,4 +1,5 @@
 ﻿function Get-ExchangeService {
+    [OutputType([Microsoft.Exchange.WebServices.Data.ExchangeService])]
     [cmdletbinding()]
     param(
         [parameter(Mandatory)][string]$emailaddress,
