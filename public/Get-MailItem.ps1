@@ -1,4 +1,4 @@
-﻿./function Get-MailItem {
+﻿function Get-MailItem {
     [cmdletbinding(DefaultParameterSetName="FolderObject")][OutputType('Microsoft.Exchange.WebServices.Data.EmailMessage')]
     param(
         [Parameter(Mandatory,ParameterSetName="FolderName")]
