@@ -2,25 +2,35 @@
     param(
         [Parameter(Mandatory)]
         [ValidateScript({$_.Ast.ParamBlock.Parameters.Count -eq 1})]
-            [ScriptBlock]$MailController
+        [Alias("MailController")]
+            [ScriptBlock]$ScriptBlock
     )
-
     $MailAction =  {
-        param($MailController, $event)
+        "MailAction Start" | Out-File -FilePath 'C:\Users\dgharri\Desktop\MailTest.txt' -Force
+        $Service = $event.MessageData.Service
+        $ScriptBlock = $event.MessageData.ScriptBlock
         Try{
-            foreach($notEvent in [array]$event.SourceEventArgs.Events){      
-                $itmId = $notEvent.ItemId
+            "Try Block" | Out-File -FilePath 'C:\Users\dgharri\Desktop\MailTest.txt' -Append
+            foreach($notEvent in [array]$event.SourceEventArgs.Events){   
+                "Foreach" | Out-File -FilePath 'C:\Users\dgharri\Desktop\MailTest.txt' -Append
+                $notEvent | FL | Out-String | Out-File -FilePath 'C:\Users\dgharri\Desktop\MailTest.txt' -Append
+                $itemId = $notEvent.ItemId
                 $PropertySet = new-object Microsoft.Exchange.WebServices.Data.PropertySet([Microsoft.Exchange.WebServices.Data.BasePropertySet]::FirstClassProperties)
                 $PropertySet.RequestedBodyType = [Microsoft.Exchange.WebServices.Data.BodyType]::Text
-                $message = [Microsoft.Exchange.WebServices.Data.EmailMessage]::Bind($Service,$itmId,$PropertySet)
-                & $MailController $message
+                "Service: $Service" | Out-File -FilePath 'C:\Users\dgharri\Desktop\MailTest.txt' -Append
+                "itemid: $ItemId" | Out-File -FilePath 'C:\Users\dgharri\Desktop\MailTest.txt' -Append
+                "PropertySet: $PropertySet"
+                $message = [Microsoft.Exchange.WebServices.Data.EmailMessage]::Bind($Service,$itemId,$PropertySet)
+                "Invoking Command" | Out-File -FilePath 'C:\Users\dgharri\Desktop\MailTest.txt' -Append
+                Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $message -ErrorAction Stop
             }
         }
         Catch{
-            Write-Error "Mail lisener failed with the following error: "
-            Write-Error $_
+            "Mail lisener failed with the following error: $_" | Out-File -FilePath 'C:\Users\dgharri\Desktop\MailTest.txt' -Force -Append
+            $_ | Out-String | Out-File -FilePath 'C:\Users\dgharri\Desktop\MailTest.txt' -Force -Append
+            Throw $_
         }
-    }
+    }.GetNewClosure()
 
     Return $MailAction
 }

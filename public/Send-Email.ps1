@@ -16,7 +16,7 @@
         [Parameter(ParameterSetName="InlineImage")]
             [HashTable]$InlineImages,
         [Parameter()]
-            [Microsoft.Exchange.WebServices.Data.ExchangeService]$Service = $DefaultService
+            [Microsoft.Exchange.WebServices.Data.ExchangeService]$Service = $Script:DefaultService
     )
     
     $Email = [Microsoft.Exchange.WebServices.Data.EmailMessage]::new($Service)

@@ -10,7 +10,7 @@
         [Parameter()][ValidateRange(1,[int]::MaxValue)]
             [int]$NumberOfItems = 1,
         [Parameter()]
-            [Microsoft.Exchange.WebServices.Data.ExchangeService]$Service = $DefaultService
+            [Microsoft.Exchange.WebServices.Data.ExchangeService]$Service = $Script:DefaultService
     )
 
     if ($PSCmdlet.ParameterSetName -eq "FolderName"){

@@ -14,7 +14,7 @@
         $MailboxFile = "$Script:DefaultMailboxLocation\$Mailbox"
         $ServiceInfo = Import-Clixml $MailboxFile
         $Service = Get-ExchangeService -emailaddress $ServiceInfo.Credential.Username -Credential $ServiceInfo.Credential.GetNetworkCredential() -Url $ServiceInfo.url
-        $Script:DefaultService = $Service.Ser
+        $Script:DefaultService = $Service
         $script:DefaultInbox = [Microsoft.Exchange.WebServices.Data.Folder]::Bind($Service,[Microsoft.Exchange.WebServices.Data.WellKnownFolderName]::Inbox)
         Return
     }

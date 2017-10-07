@@ -2,7 +2,7 @@
     [cmdletbinding()]
     param(
         [Parameter()]
-            [Microsoft.Exchange.WebServices.Data.ExchangeService]$Service = $DefaultService,
+            [Microsoft.Exchange.WebServices.Data.ExchangeService]$Service = $Script:DefaultService,
         [Parameter()]
             [switch]$subonly
     )
