@@ -10,7 +10,9 @@
         [Parameter()][ValidateRange(1,[int]::MaxValue)]
             [int]$NumberOfItems = 1,
         [Parameter()]
-            [Microsoft.Exchange.WebServices.Data.ExchangeService]$Service = $Script:DefaultService
+            [Microsoft.Exchange.WebServices.Data.ExchangeService]$Service = $Script:DefaultService,
+        [Parameter()]
+            [switch]$HtmlBody
     )
 
     if ($PSCmdlet.ParameterSetName -eq "FolderName"){
@@ -18,7 +20,12 @@
         $FolderObject = Get-EwsFolder -FolderName $FolderName -Service $Service
     }
     $PropertySet = new-object Microsoft.Exchange.WebServices.Data.PropertySet([Microsoft.Exchange.WebServices.Data.BasePropertySet]::FirstClassProperties)
-    $PropertySet.RequestedBodyType = [Microsoft.Exchange.WebServices.Data.BodyType]::Text
+    if ($HtmlBody){
+        $PropertySet.RequestedBodyType = [Microsoft.Exchange.WebServices.Data.BodyType]::HTML
+    }
+    else{
+        $PropertySet.RequestedBodyType = [Microsoft.Exchange.WebServices.Data.BodyType]::Text
+    }
 
     $items = $FolderObject.FindItems([Microsoft.Exchange.WebServices.Data.ItemView]::new($NumberOfItems,$ItemNumber))
     $items.Load($PropertySet)
